@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block body %}
+
+    <div class="container my-4">
+        <div class="row">
+            <div class="col-lg-6 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Customers</h5>
+                        <div class="mb-5">
+                            <div class="list-group list-group-flush">
+                                {% for c in customers %}
+                                    <a href="{% url 'customer-detail' c.id %}"
+                                       class="list-group-item list-group-item-action">
+
+                                        <div class="ms-2 me-auto">
+                                            <div class="fw-bold">  {{ c.name }}</div>
+                                            {{ c.date_created }}
+                                            {% for l in c.labels.all %}
+                                                <span class="badge bg-primary rounded-pill  float-end">{{ l.name }}</span>
+                                            {% endfor %}
+                                        </div>
+
+                                    </a>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <form method="post">
+                                {% csrf_token %}
+                                {% for f in customer_form %}
+                                    <div class="form-group">
+                                        {{ f }}
+                                    </div>
+                                {% endfor %}
+                                <input type="submit" value="Add" class="btn btn-primary m-1 ">
+                            </form>
+                            {% if customer_form.errors %}
+                                <div class="alert alert-danger">
+                                    {{ customer_form.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Labels</h5>
+                        <div class="mb-3">
+                            <form method="post" action="{% url 'label' %}">
+                                {% csrf_token %}
+                                {% for f in label_form %}
+                                    <div class="form-group">
+                                        {{ f }}
+                                    </div>
+                                {% endfor %}
+                                <input type="submit" value="Add" class="btn btn-primary m-1">
+                            </form>
+                            {% if label_form.errors %}
+                                <div class="alert alert-danger">
+                                    {{ label_form.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        {% for l in labels %}
+                            <span class="badge rounded-pill bg-primary">{{ l }}</span>
+                        {% endfor %}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

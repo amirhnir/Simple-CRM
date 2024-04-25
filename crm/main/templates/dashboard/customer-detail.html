@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% block body %}
+    <div class="container my-4">
+        <div class="row">
+            <div class="col-lg-6 order-lg-1">
+                <div class="card mb-3 bg-primary">
+                    <div class="card-body">
+                        <h2 class="card-title text-white">Notes</h2>
+                        {% for n in notes %}
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    {{ n.description }}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <form method="post">
+                    <input type="hidden" name="type" value="note">
+                    {% csrf_token %}
+                    {% for f in note_form %}
+                        <div class="mb-3">
+                            {{ f }}
+                        </div>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-primary m-1">Add Note</button>
+                </form>
+                {% if note_form.errors %}
+                    <div class="alert alert-danger mb-3">
+                        {{ note_form.errors }}
+                    </div>
+                {% endif %}
+            </div>
+            <div class="col-lg-6 order-lg-2">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h2 class="card-title">User Information</h2>
+                        <h4 class="card-subtitle mb-2 text-muted">User {{ customer.id }} - {{ customer.name }}
+                            - {{ customer.phone }}
+                        </h4>
+                        <h5 class="card-subtitle mb-2 text-muted">
+                            {{ customer.date_created }}
+                        </h5>
+
+                        {% for l in labels %}
+                            <span class="badge rounded-pill bg-primary">{{ l }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h4 class="card-title">Add Label</h4>
+                        <form method="post">
+                            {% csrf_token %}
+                            {% for f in label_form %}
+                                <div class="mb-3">
+                                    {{ f }}
+                                </div>
+                            {% endfor %}
+                            <input type="submit" value="Add Label" class="btn btn-success">
+                        </form>
+                        {% if label_form.errors %}
+                            <div class="alert alert-danger mt-3">
+                                {{ label_form.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h4 class="card-title">Remove Label</h4>
+                        <form method="post">
+                            <input type="hidden" name="remove" value="1">
+                            {% csrf_token %}
+                            {% for f in label_form %}
+                                <div class="mb-3">
+                                    {{ f }}
+                                </div>
+                            {% endfor %}
+                            <input type="submit" value="Remove Label" class="btn btn-danger">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
